@@ -1,8 +1,23 @@
 
-//var ObjectID = require('mongodb').ObjectID;
-
+let NoteModel = require('../models/note')
 
 module.exports = function(app) {
+
+  // Save new note
+  app.post('/notes', (req, res) => {
+    let note = new NoteModel({
+      body: req.body.body,
+      title: req.body.title
+    })
+    note.save().then(doc => {
+      console.log(doc)
+      res.status(200).send(doc);
+    }).catch(err => {
+      console.error(err)
+      res.status(401).send({ 'error': 'An error has occurred' }); 
+    })
+  });
+
 
   // Get note for ID
   // app.get('/notes/:id', (req, res) => {
@@ -18,29 +33,6 @@ module.exports = function(app) {
   //   });
   // });
 
-  
-
-
-
-  let NoteModel = require('../models/note')
-
-  // Save new note
-  app.post('/notes', (req, res) => {
-    console.log("-->" + req)
-    let note = new NoteModel({
-      body: req.body.body,
-      title: req.body.title
-    })
-    note.save()
-    .then(doc => {
-      console.log(doc)
-      res.send(doc);
-    })
-    .catch(err => {
-      console.error(err)
-      res.send({ 'error': 'An error has occurred' }); 
-    })
-  });
 
   // Delete note with id
   // app.delete('/notes/:id', (req, res) => {

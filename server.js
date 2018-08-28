@@ -1,23 +1,20 @@
 const express        = require('express');
-//const MongoClient    = require('mongodb').MongoClient;
-
-const bodyParser     = require('body-parser');
-// const db             = require('./config/db');
-
 const app            = express();
-const port = 8000;
+const bodyParser     = require('body-parser');
+const port 			 = 8000;
 
-app.use(bodyParser.urlencoded({ extended: true }));
-require('./config/database')
-require('./app/routes')(app);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+const session 		 = require('express-session');
+const db 			 = require('./config/database');
+const router 		 = require('./app/routes')(app);
+app.get('/checking', function(req, res){
+	res.json({
+	   "Tutorial": "Welcome to the Node express JWT Tutorial"
+	});
+ });
+// listen on port $port
 app.listen(port, () => {
 	console.log('We are live on ' + port);
-});     
-
-// MongoClient.connect(db.url, (err, database) => {
-//   	if (err) return console.log(err)
-//   	require('./app/routes')(app, database);
-//   	app.listen(port, () => {
-//    		console.log('We are live on ' + port);
-//   	});               
-// })
+});  
