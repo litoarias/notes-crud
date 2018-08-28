@@ -1,12 +1,13 @@
-
+const express = require('express');
+const router = express.Router();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('../models/user.model');
 
-module.exports = function(app) {
+// module.exports = function(app) {
     
-    app.post('/signup', function(req, res) { 
+    router.post('/signup', function(req, res) { 
         bcrypt.hash(req.body.password, 10, function(err, hash) { 
             if(err) {
                 return res.status(500).json({
@@ -34,7 +35,7 @@ module.exports = function(app) {
     });
 
 
-    app.post('/signin', function(req, res){
+    router.post('/signin', function(req, res){
         User.findOne({email: req.body.email})
         .exec()
         .then(function(user) {
@@ -48,11 +49,7 @@ module.exports = function(app) {
                 const JWTToken = jwt.sign({
                     email: user.email,
                     _id: user._id 
-                },
-                'secret',
-                {
-                    expiresIn: '2h'
-                });
+                }, 'temporary_solution', { expiresIn: '50s' });
                 return res.status(200).json({
                     success: 'Welcome to the JWT Auth',
                     token: JWTToken
@@ -69,4 +66,7 @@ module.exports = function(app) {
            });
         });;
      });
-};
+// };
+
+
+module.exports = router;

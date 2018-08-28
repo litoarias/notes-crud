@@ -1,22 +1,21 @@
+const express = require('express');
+const router = express.Router();
+const VerifyToken = require('../verifyToken');
+const NoteModel = require('../models/note.model')
 
-let NoteModel = require('../models/note')
-
-module.exports = function(app) {
-
-  // Save new note
-  app.post('/notes', (req, res) => {
-    let note = new NoteModel({
-      body: req.body.body,
-      title: req.body.title
-    })
-    note.save().then(doc => {
-      console.log(doc)
-      res.status(200).send(doc);
-    }).catch(err => {
-      console.error(err)
-      res.status(401).send({ 'error': 'An error has occurred' }); 
-    })
-  });
+// Save new note
+router.post('/new', VerifyToken, (req, res) => {
+  let note = new NoteModel({
+    body: req.body.body,
+    title: req.body.title
+  })
+  note.save().then(doc => {
+    res.status(200).send(doc);
+  }).catch(err => {
+    console.error(err)
+    res.status(401).send({ 'error': 'An error has occurred' }); 
+  })
+});
 
 
   // Get note for ID
@@ -47,5 +46,4 @@ module.exports = function(app) {
   //   });
   // });
 
-  
-};
+  module.exports = router;
