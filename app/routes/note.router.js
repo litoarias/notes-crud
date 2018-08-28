@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const VerifyToken = require('../verifyToken');
+const VerifyToken = require('../_helpers/verifyToken');
 const NoteModel = require('../models/note.model')
 
 // Save new note
