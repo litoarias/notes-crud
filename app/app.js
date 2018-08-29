@@ -7,7 +7,6 @@ const db 			 = require('../config/database');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 app.use('/api/user', user)
 app.use('/api/notes', notes)
 

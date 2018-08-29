@@ -9,7 +9,7 @@ const config = require('../../config');
 router.post('/signup', function(req, res) { 
     bcrypt.hash(req.body.password, 10, function(err, hash) { 
         if(err) {
-            return res.status(500).json({
+            res.status(500).json({
                 error: "" + err
             });
         } else {
@@ -40,7 +40,7 @@ router.post('/signin', function(req, res) {
     .then(function(user) {
         bcrypt.compare(req.body.password, user.password, function(err, result) {
             if(err) {
-                return res.status(401).json({
+                res.status(401).json({
                     failed: 'Unauthorized Access'
                 });
             }
@@ -48,13 +48,13 @@ router.post('/signin', function(req, res) {
                 const JWTToken = jwt.sign({
                     email: user.email,
                     _id: user._id 
-                }, config.secret, { expiresIn: '60s' });
-                return res.status(200).json({
+                }, config.secret, { expiresIn: '300s' });
+                res.status(200).json({
                     success: 'Welcome to the JWT Auth',
                     token: JWTToken
                 });
             }
-            return res.status(401).json({
+            res.status(401).json({
                 failed: 'Unauthorized Access'
             });
         });

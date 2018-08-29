@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const VerifyToken = require('../_helpers/verifyToken');
 const NoteModel = require('../models/note.model')
 
@@ -10,40 +11,60 @@ router.post('/new', VerifyToken, (req, res) => {
     title: req.body.title
   })
   note.save().then(doc => {
-    res.status(200).send(doc);
+    return res.status(200).json({
+      data: doc
+    })
   }).catch(err => {
-    console.error(err)
-    res.status(401).send({ 'error': 'An error has occurred' }); 
+    return res.status(401).json({ 
+      error: 'An error has occurred' 
+    }); 
   })
 });
 
+// Get note for ID
+router.get('/:id', VerifyToken, function(req, res) {
+  const id = req.params.id;
+  if(mongoose.Types.ObjectId.isValid(id)) {
+    NoteModel.findById(id, function(err, item) {
+      if (err) {
+        return res.status(500).json({
+          error: err
+        });
+      } else {
+        res.status(200).json({
+          message: "Congrats!, you can give item",
+          item: item
+        });
+      }
+    });
+  } else {
+    res.status(500).json({
+      error: 'Item not found'
+    });
+  }
+});
 
-  // Get note for ID
-  // app.get('/notes/:id', (req, res) => {
-  //   const id = req.params.id;
-  //   const details = { '_id': new ObjectID(id) };
-  //   db.collection('notes').findOne(details, (err, item) => {
-  //     if (err) {
-  //       res.send({'error':'An error has occurred'});
-  //     } else {
-  //       console.log(item)
-  //       res.send(item);
-  //     }
-  //   });
-  // });
+// Delete note with id
+router.delete('/:id', VerifyToken, function(req, res) {
+  const id = req.params.id;
+  if(mongoose.Types.ObjectId.isValid(id)) {
+    NoteModel.deleteOne({_id: id}, function (err) {
+      if (err) {
+        res.status(500).json({
+          error: '' + err
+        });
+      } else {
+        res.status(200).json({
+          message: 'Note successfully deleted',
+          id: id
+        });
+      }
+    });
+  } else {
+    res.status(500).json({
+      message: 'Id isnt valid'
+    });
+  }
+});
 
-
-  // Delete note with id
-  // app.delete('/notes/:id', (req, res) => {
-  //   const id = req.params.id;
-  //   const details = { '_id': new ObjectID(id) };
-  //   db.collection('notes').remove(details, (err, item) => {
-  //     if (err) {
-  //       res.send({'error':'An error has occurred'});
-  //     } else {
-  //       res.send('Note ' + id + ' deleted!');
-  //     } 
-  //   });
-  // });
-
-  module.exports = router;
+module.exports = router;
