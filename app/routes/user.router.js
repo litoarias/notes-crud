@@ -48,7 +48,7 @@ router.post('/signin', function(req, res) {
                 const JWTToken = jwt.sign({
                     email: user.email,
                     _id: user._id 
-                }, config.secret, { expiresIn: '50s' });
+                }, config.secret, { expiresIn: '60s' });
                 return res.status(200).json({
                     success: 'Welcome to the JWT Auth',
                     token: JWTToken
