@@ -53,10 +53,11 @@ router.post('/signin', function(req, res) {
                     success: 'Welcome to the JWT Auth',
                     token: JWTToken
                 });
-            }
-            res.status(401).json({
-                failed: 'Unauthorized Access'
-            });
+            } else {
+            	res.status(401).json({
+                     failed: 'Unauthorized Access'
+            	});
+	   }
         });
     })
     .catch(error => {

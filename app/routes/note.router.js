@@ -27,7 +27,7 @@ router.get('/:id', VerifyToken, function(req, res) {
   if(mongoose.Types.ObjectId.isValid(id)) {
     NoteModel.findById(id, function(err, item) {
       if (err) {
-         res.status(500).json({
+        res.status(500).json({
           error: err
         });
       } else {
