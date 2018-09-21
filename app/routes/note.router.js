@@ -11,11 +11,11 @@ router.post('/new', VerifyToken, (req, res) => {
     title: req.body.title
   })
   note.save().then(doc => {
-   res.status(200).json({
+    res.status(200).json({
       data: doc
     })
   }).catch(err => {
-   res.status(401).json({ 
+    res.status(401).json({ 
       error: 'An error has occurred' 
     }); 
   })
@@ -27,7 +27,7 @@ router.get('/:id', VerifyToken, function(req, res) {
   if(mongoose.Types.ObjectId.isValid(id)) {
     NoteModel.findById(id, function(err, item) {
       if (err) {
-       res.status(500).json({
+        res.status(500).json({
           error: err
         });
       } else {
